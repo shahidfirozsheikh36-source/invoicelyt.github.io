@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Invoicelyt – Free Invoice Generator</title>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f4f7;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+h1,h2 {
+  text-align: center;
+}
+input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+button {
+  padding: 10px;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.total {
+  text-align: right;
+  font-size: 18px;
+  margin-top: 10px;
+}
+#ad {
+  background: #eee;
+  padding: 10px;
+  text-align: center;
+  margin: 15px 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Invoicelyt</h1>
+<p style="text-align:center">Free Invoice Generator for Businesses</p>
+
+<!-- AUTH -->
+<div id="auth">
+  <h2>Login / Signup</h2>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+<p>Welcome, <span id="userEmail"></span>
+<button onclick="logout()">Logout</button></p>
+
+<div id="ad">Ad Space (Google AdSense)</div>
+
+<h2>Create Invoice</h2>
+
+<label>Business Name</label>
+<input id="business">
+
+<label>Client Name</label>
+<input id="client">
+
+<label>Invoice Number</label>
+<input id="invoiceNo">
+
+<table>
+<tr>
+<th>Item</th>
+<th>Qty</th>
+<th>Price</th>
+<th>Total</th>
+</tr>
+<tr>
+<td><input></td>
+<td><input type="number" oninput="calc()"></td>
+<td><input type="number" oninput="calc()"></td>
+<td class="rowTotal">0</td>
+</tr>
+</table>
+
+<button onclick="addRow()">Add Item</button>
+
+<div class="total">
+Grand Total: ₹<span id="grandTotal">0</span>
+</div>
+
+<button onclick="window.print()">Print / Save PDF</button>
+
+</div>
+</div>
+
+<script>
+/* 🔴 REPLACE THIS CONFIG ONLY */
+const firebaseConfig = {
+  apiKey: "PASTE_YOUR_API_KEY",
+  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+  projectId: "PASTE_YOUR_PROJECT_ID"
+};
+/* 🔴 STOP */
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+function signup() {
+  auth.createUserWithEmailAndPassword(
+    email.value, password.value
+  ).catch(e => alert(e.message));
+}
+
+function login() {
+  auth.signInWithEmailAndPassword(
+    email.value, password.value
+  ).catch(e => alert(e.message));
+}
+
+function logout() {
+  auth.signOut();
+}
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    auth.style.display = "none";
+    app.style.display = "block";
+    userEmail.innerText = user.email;
+  } else {
+    auth.style.display = "block";
+    app.style.display = "none";
+  }
+});
+
+function addRow() {
+  const table = document.querySelector("table");
+  const row = table.insertRow(-1);
+  row.innerHTML = `
+    <td><input></td>
+    <td><input type="number" oninput="calc()"></td>
+    <td><input type="number" oninput="calc()"></td>
+    <td class="rowTotal">0</td>
+  `;
+}
+
+function calc() {
+  let total = 0;
+  document.querySelectorAll("table tr").forEach((row, i) => {
+    if (i === 0) return;
+    const qty = row.cells[1].children[0].value || 0;
+    const price = row.cells[2].children[0].value || 0;
+    const rowTotal = qty * price;
+    row.cells[3].innerText = rowTotal;
+    total += rowTotal;
+  });
+  document.getElementById("grandTotal").innerText = total;
+}
+</script>
+
+</body>
+</html>
