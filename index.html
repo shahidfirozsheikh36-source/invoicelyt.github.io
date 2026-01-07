@@ -1,203 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Invoicelyt – Free Invoice Generator</title>
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f2f4f7;
-  margin: 0;
-  padding: 20px;
-}
-.container {
-  max-width: 900px;
-  margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-}
-h1,h2 {
-  text-align: center;
-}
-input {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
-}
-button {
-  padding: 10px;
-  background: black;
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-top: 10px;
-}
-.total {
-  text-align: right;
-  font-size: 18px;
-  margin-top: 10px;
-}
-#ad {
-  background: #eee;
-  padding: 10px;
-  text-align: center;
-  margin: 15px 0;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>Invoicelyt</h1>
-<p style="text-align:center">Free Invoice Generator for Businesses</p>
-
-<!-- AUTH -->
-<div id="auth">
-  <h2>Login / Signup</h2>
-  <input id="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="signup()">Sign Up</button>
-  <button onclick="login()">Login</button>
-</div>
-
-<!-- APP -->
-<div id="app" style="display:none">
-
-<p>Welcome, <span id="userEmail"></span>
-<button onclick="logout()">Logout</button></p>
-
-<div id="ad">Ad Space (Google AdSense)</div>
-
-<h2>Create Invoice</h2>
-
-<label>Business Name</label>
-<input id="business">
-
-<label>Client Name</label>
-<input id="client">
-
-<label>Invoice Number</label>
-<input id="invoiceNo">
-
-<table>
-<tr>
-<th>Item</th>
-<th>Qty</th>
-<th>Price</th>
-<th>Total</th>
-</tr>
-<tr>
-<td><input></td>
-<td><input type="number" oninput="calc()"></td>
-<td><input type="number" oninput="calc()"></td>
-<td class="rowTotal">0</td>
-</tr>
-</table>
-
-<button onclick="addRow()">Add Item</button>
-
-<div class="total">
-Grand Total: ₹<span id="grandTotal">0</span>
-</div>
-
-<button onclick="window.print()">Print / Save PDF</button>
-
-</div>
-</div>
-
-<script>
-/* 🔴 REPLACE THIS CONFIG ONLY */
-const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
-  projectId: "PASTE_YOUR_PROJECT_ID"
-};
-/* 🔴 STOP */
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-
-function signup() {
-  auth.createUserWithEmailAndPassword(
-    email.value, password.value
-  ).catch(e => alert(e.message));
-}
-
-function login() {
-  auth.signInWithEmailAndPassword(
-    email.value, password.value
-  ).catch(e => alert(e.message));
-}
-
-function logout() {
-  auth.signOut();
-}
-
-auth.onAuthStateChanged(user => {
-  if (user) {
-    auth.style.display = "none";
-    app.style.display = "block";
-    userEmail.innerText = user.email;
-  } else {
-    auth.style.display = "block";
-    app.style.display = "none";
-  }
-});
-
-function addRow() {
-  const table = document.querySelector("table");
-  const row = table.insertRow(-1);
-  row.innerHTML = `
-    <td><input></td>
-    <td><input type="number" oninput="calc()"></td>
-    <td><input type="number" oninput="calc()"></td>
-    <td class="rowTotal">0</td>
-  `;
-}
-
-function calc() {
-  let total = 0;
-  document.querySelectorAll("table tr").forEach((row, i) => {
-    if (i === 0) return;
-    const qty = row.cells[1].children[0].value || 0;
-    const price = row.cells[2].children[0].value || 0;
-    const rowTotal = qty * price;
-    row.cells[3].innerText = rowTotal;
-    total += rowTotal;
-  });
-  document.getElementById("grandTotal").innerText = total;
-}
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First Website</title>
+    <title>My Professional Website</title>
+    <style>
+        /* Reset & Fonts */
+        * {margin:0; padding:0; box-sizing:border-box;}
+        body {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height:1.6; background:#f5f7fb; color:#333;}
+
+        /* Header */
+        header {
+            background:#0077ff;
+            color:white;
+            padding:20px 0;
+            text-align:center;
+            box-shadow:0 2px 6px rgba(0,0,0,0.2);
+        }
+        header h1 {font-size:2.5rem;}
+        nav a {
+            color:white;
+            margin:0 15px;
+            text-decoration:none;
+            font-weight:bold;
+            transition:0.3s;
+        }
+        nav a:hover {text-decoration:underline;}
+
+        /* Hero Section */
+        .hero {
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            height:70vh;
+            background: linear-gradient(to right, #0077ff, #00c6ff);
+            color:white;
+            text-align:center;
+            padding:0 20px;
+        }
+        .hero h2 {font-size:2rem; margin-bottom:20px;}
+        .hero p {font-size:1.2rem; margin-bottom:30px;}
+        .hero a {
+            padding:12px 25px;
+            background:white;
+            color:#0077ff;
+            font-weight:bold;
+            border-radius:5px;
+            text-decoration:none;
+            transition:0.3s;
+        }
+        .hero a:hover {background:#e0e0e0;}
+
+        /* About Section */
+        .about {
+            padding:60px 20px;
+            max-width:1000px;
+            margin:auto;
+            text-align:center;
+        }
+        .about h2 {color:#0077ff; margin-bottom:20px; font-size:2rem;}
+        .about p {font-size:1.1rem; color:#555;}
+
+        /* Footer */
+        footer {
+            background:#333;
+            color:white;
+            padding:20px;
+            text-align:center;
+        }
+
+        /* Buttons */
+        .btn {
+            display:inline-block;
+            padding:10px 20px;
+            margin:10px 5px;
+            background:#0077ff;
+            color:white;
+            border-radius:5px;
+            text-decoration:none;
+            font-weight:bold;
+            transition:0.3s;
+        }
+        .btn:hover {background:#005ecb;}
+    </style>
 </head>
 <body>
-    <h1>Welcome to My Website!</h1>
-    <p>This is my first webpage. 🚀</p>
+
+<header>
+    <h1>My Professional Website</h1>
+    <nav>
+        <a href="#hero">Home</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<section class="hero" id="hero">
+    <h2>Welcome to My World</h2>
+    <p>A modern, clean website built for learning and growth.</p>
+    <a href="#about">Learn More</a>
+</section>
+
+<section class="about" id="about">
+    <h2>About Me</h2>
+    <p>Hi! I’m a beginner web developer learning how to create professional websites. This site is a test project but can grow into a real business website later.</p>
+    <a href="#contact" class="btn">Contact Me</a>
+    <a href="#" class="btn">See Portfolio</a>
+</section>
+
+<footer id="contact">
+    &copy; 2026 My Professional Website | Built with ❤️ by Me
+</footer>
+
 </body>
 </html>
